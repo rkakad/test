@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Be My Valentine 💖</title>
+
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", sans-serif;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    .card {
+      background: white;
+      padding: 36px 28px;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      text-align: center;
+      z-index: 1;
+      max-width: 90vw;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      color: #e63946;
+      margin-bottom: 20px;
+    }
+
+    .photo {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid #ff4d6d;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    button {
+      font-size: 1.1rem;
+      padding: 14px 28px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      transition: all 0.25s ease;
+      touch-action: manipulation;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+      left: 50%;
+      bottom: 8%;
+      transform: translateX(-50%);
+      box-shadow: 0 10px 20px rgba(255,77,109,0.4);
+    }
+
+    #yesBtn.highlight {
+      transform: translateX(-50%) scale(1.1);
+      box-shadow: 0 0 25px 8px rgba(255,77,109,0.9);
+    }
+
+    #noBtn {
+      background: #adb5bd;
+      color: #333;
+      left: 20%;
+      bottom: 8%;
+    }
+
+    /* Celebration */
+    .celebrate {
+      height: 100vh;
+      width: 100vw;
+      background: linear-gradient(135deg,#ff4d6d,#ffc6d9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .celebrate img {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 6px solid white;
+      object-fit: cover;
+      margin-bottom: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .celebrate h1 {
+      font-size: 2.6rem;
+      margin-bottom: 10px;
+      text-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .celebrate p {
+      font-size: 1.4rem;
+      opacity: 0.95;
+    }
+
+    /* Heart confetti */
+    .heart {
+      position: fixed;
+      top: -20px;
+      width: 18px;
+      height: 18px;
+      background: #ff4d6d;
+      transform: rotate(45deg);
+      animation: fall linear forwards;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      width: 18px;
+      height: 18px;
+      background: #ff4d6d;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .heart::before {
+      top: -9px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -9px;
+      top: 0;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(45deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <img src="bhoomi.jpg" alt="Bhoomi" class="photo" />
+    <h1>Will you be my Valentine,<br>Bhoomi? 💘</h1>
+  </div>
+
+  <button id="yesBtn">YES 💖</button>
+  <button id="noBtn">NO 🙃</button>
+
+  <audio id="music" src="romantic.mp3" loop></audio>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const music = document.getElementById("music");
+
+    /* Run-away NO button (mouse + touch) */
+    function evade(x, y) {
+      const rect = noBtn.getBoundingClientRect();
+      const dx = x - (rect.left + rect.width / 2);
+      const dy = y - (rect.top + rect.height / 2);
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < 130) {
+        yesBtn.classList.add("highlight");
+
+        const nx = Math.random() * (window.innerWidth - rect.width);
+        const ny = Math.random() * (window.innerHeight - rect.height);
+        noBtn.style.left = nx + "px";
+        noBtn.style.top = ny + "px";
+      } else {
+        yesBtn.classList.remove("highlight");
+      }
+    }
+
+    document.addEventListener("mousemove", e => evade(e.clientX, e.clientY));
+    document.addEventListener("touchstart", e => {
+      const t = e.touches[0];
+      evade(t.clientX, t.clientY);
+    });
+
+    /* Smooth music fade-in */
+    function fadeInMusic() {
+      music.volume = 0;
+      music.play();
+      let vol = 0;
+      const fade = setInterval(() => {
+        vol += 0.05;
+        music.volume = Math.min(vol, 1);
+        if (vol >= 1) clearInterval(fade);
+      }, 200);
+    }
+
+    /* YES celebration */
+    yesBtn.addEventListener("click", () => {
+      document.body.innerHTML = `
+        <div class="celebrate">
+          <img src="bhoomi.jpg" alt="Bhoomi">
+          <h1>🎉 Yay | Bhoomi said YES 💘</h1>
+          <p>Best Valentine ever ❤️</p>
+        </div>
+      `;
+
+      fadeInMusic();
+
+      const interval = setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.animationDuration = 2 + Math.random() * 3 + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }, 120);
+
+      setTimeout(() => clearInterval(interval), 5000);
+    });
+  </script>
+
+</body>
+</html>
+
